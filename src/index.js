@@ -5,18 +5,18 @@ import { fetchCountries } from './js/fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
-const inputEle = document.getElementById('.input-box');
-const listEle = document.querySelector('.country-list');
-const infoEle = document.querySelector('.country-info');
+const inputEl = document.getElementById('search-box');
+const listEl = document.querySelector('.country-list');
+const infoEl = document.querySelector('.country-info');
 
 const cleanMarkup = ref => (ref.innerHTML = '');
 
-const inputHandler = (ev) => {
-  const textInput = ev.target.value.trim();
+const inputHandler = e => {
+  const textInput = e.target.value.trim();
 
   if (!textInput) {
-    cleanMarkup(listEle);
-    cleanMarkup(infoEle);
+    cleanMarkup(listEl);
+    cleanMarkup(infoEl);
     return;
   }
 
@@ -30,21 +30,21 @@ const inputHandler = (ev) => {
       renderMarkup(data);
     })
     .catch(err => {
-      cleanMarkup(listEle);
-      cleanMarkup(infoEle);
+      cleanMarkup(listEl);
+      cleanMarkup(infoEl);
       Notify.failure('Oops, there is no country with that name');
     });
 };
 
 const renderMarkup = data => {
   if (data.length === 1) {
-    cleanMarkup(listEle);
+    cleanMarkup(listEl);
     const markupInfo = createInfoMarkup(data);
     infoEl.innerHTML = markupInfo;
   } else {
-    cleanMarkup(infoEle);
+    cleanMarkup(infoEl);
     const markupList = createListMarkup(data);
-    listEle.innerHTML = markupList;
+    listEl.innerHTML = markupList;
   }
 };
 
@@ -60,11 +60,13 @@ const createListMarkup = data => {
 const createInfoMarkup = data => {
   return data.map(
     ({ name, capital, population, flags, languages }) =>
-      `<h1><img src="${flags.png}" alt="${name.official}" width="40" height="40">${name.official}</h1>
+      `<h1><img src="${flags.png}" alt="${name.official}" width="40" height="40">${
+        name.official
+      }</h1>
       <p>Capital: ${capital}</p>
       <p>Population: ${population}</p>
       <p>Languages: ${Object.values(languages)}</p>`,
   );
 };
 
-inputEle.addEventListener('input', debounce(inputHandler, DEBOUNCE_DELAY));
+inputEl.addEventListener('input', debounce(inputHandler, DEBOUNCE_DELAY));
